@@ -6,7 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,49 +41,32 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun OceanDepthApp() {
-    Column {
+    Column (modifier = Modifier.verticalScroll(rememberScrollState())){
         Box(
-            modifier = Modifier.fillMaxWidth()
-                .height(150.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(350.dp)
                 .background(Color.Yellow)
         ) {
             // Content of the first box (e.g., landmarks, sea creatures, etc.)
         }
         Box(
-            modifier = Modifier.fillMaxWidth()
-                .height(300.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(11000.dp)
                 .background(Color.Blue)
         ) {
             // Content of the second box (e.g., landmarks, sea creatures, etc.)
         }
         Box(
-            modifier = Modifier.fillMaxWidth()
-                .height(100.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
                 .background(Color.Black)
         ) {
             // Content of the second box (e.g., landmarks, sea creatures, etc.)
         }
     }
-}
-
-
-@Composable
-private fun getSecondBoxHeight(): Dp {
-    val configuration = LocalConfiguration.current
-    val screenHeight: Dp = with(LocalDensity.current) {
-        configuration.screenHeightDp.dp
-    }
-
-    // Define the heights for each depth level
-    val heights = listOf(100.dp, 200.dp, 500.dp)
-    val depths = listOf(1000.dp, 3000.dp, 11000.dp)
-
-    // Find the index of the closest depth level based on the current screenHeight
-    val closestDepthIndex = depths.indexOfFirst { it > screenHeight }
-        .takeIf { it != -1 } ?: depths.lastIndex
-
-    // Calculate the second box height based on the closest depth level and the corresponding height
-    return (screenHeight.value / depths[closestDepthIndex].value) * heights[closestDepthIndex]
 }
 
 @Composable
