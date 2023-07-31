@@ -3,7 +3,9 @@ package com.necromyd.oceandepths
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -15,46 +17,72 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.times
 import com.necromyd.oceandepths.ui.theme.OceanDepthsTheme
+
+lateinit var viewModel: OceanViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = OceanViewModel()
+
         setContent {
             OceanDepthsTheme {
                 OceanDepthApp()
-
+                DepthMeter()
             }
         }
     }
 }
 
 @Composable
+fun DepthMeter() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp), contentAlignment = Alignment.BottomEnd
+    ) {
+        Text(
+            text = viewModel.getDepth().toInt().toString() + "m",
+            color = Color.White,
+            fontSize = 40.sp
+        )
+    }
+
+}
+
+@Composable
 fun OceanDepthApp() {
-    Column (modifier = Modifier.verticalScroll(rememberScrollState())){
+    val verticalScrollState = rememberScrollState()
+    val skyColor = Color(0xFF70B5FA)
+
+    Column(
+        modifier = Modifier
+            .verticalScroll(verticalScrollState)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(350.dp)
-                .background(Color.Yellow)
+                .height(720.dp)
+                .background(skyColor)
         ) {
             // Content of the first box (e.g., landmarks, sea creatures, etc.)
         }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(11000.dp)
-                .background(Color.Blue)
+                .height(80000.dp)
+                .background(
+                    brush = verticalGradientBackground(gradientPercentage = 0.11f)
+                )
         ) {
             // Content of the second box (e.g., landmarks, sea creatures, etc.)
         }
@@ -62,11 +90,27 @@ fun OceanDepthApp() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-                .background(Color.Black)
+                .background(Color.DarkGray)
         ) {
             // Content of the second box (e.g., landmarks, sea creatures, etc.)
         }
+        LaunchedEffect(verticalScrollState.value) {
+            viewModel.scrollPosition.value = verticalScrollState.value
+        }
     }
+}
+
+@Composable
+fun verticalGradientBackground(gradientPercentage: Float): Brush {
+    val gradientHeightOcean = 80000.dp * gradientPercentage
+
+    return Brush.verticalGradient(
+        colors = listOf(Color.Blue, Color.Black),
+        startY = 0f,
+        endY = with(LocalDensity.current) { gradientHeightOcean.toPx() }
+    )
+
+
 }
 
 @Composable
@@ -140,5 +184,7 @@ fun TitleScreenContent() {
 @Composable
 fun DefaultPreview() {
     OceanDepthsTheme {
+        DepthMeter()
+        OceanDepthApp()
     }
 }
