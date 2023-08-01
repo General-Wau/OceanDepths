@@ -1,11 +1,14 @@
 package com.necromyd.oceandepths
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class OceanViewModel : ViewModel() {
-//    var depth = mutableStateOf(0)
     var scrollPosition = mutableStateOf(0)
+    var isScrollEnabled = mutableStateOf(false)
 
     fun getDepth(): Double{
         return scrollPosition.value / 19.259

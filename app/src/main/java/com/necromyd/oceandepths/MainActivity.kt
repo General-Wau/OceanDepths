@@ -1,17 +1,13 @@
 package com.necromyd.oceandepths
 
 import android.os.Bundle
-import android.widget.ImageButton
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.CoroutineScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -19,10 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +47,7 @@ fun OceanDepthsApp() {
     Box {
         OceanDepthApp(verticalScrollState)
         DepthMeter(verticalScrollState)
+        TitleScreenContent()
     }
 
 }
@@ -90,9 +85,10 @@ fun DepthMeter(verticalScrollState: ScrollState) {
 fun OceanDepthApp(verticalScrollState: ScrollState) {
     val skyColor = Color(0xFF70B5FA)
 
+
     Column(
-        modifier = Modifier
-            .verticalScroll(verticalScrollState)
+        modifier = if (viewModel.isScrollEnabled.value) Modifier
+            .verticalScroll(verticalScrollState) else Modifier
     ) {
         Box(
             modifier = Modifier
@@ -143,8 +139,6 @@ fun verticalGradientBackground(gradientPercentage: Float): Brush {
 @Composable
 fun TitleScreenContent() {
     var showContent by remember { mutableStateOf(true) }
-    val context = LocalContext.current
-    val density = LocalDensity.current
     val customButtonColor = MaterialTheme.colors.primaryVariant.copy(alpha = 0.8f)
 
     if (showContent) {
@@ -171,6 +165,7 @@ fun TitleScreenContent() {
                         .height(50.dp),
                     onClick = {
                         showContent = !showContent
+                        viewModel.isScrollEnabled.value = true
                     },
                     shape = RoundedCornerShape(20.dp),
                     elevation = ButtonDefaults.elevation(
