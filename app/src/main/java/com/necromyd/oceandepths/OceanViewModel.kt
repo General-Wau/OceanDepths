@@ -8,6 +8,6 @@ class OceanViewModel : ViewModel() {
     var scrollPosition = mutableStateOf(0)
 
     fun getDepth(): Double{
-        return scrollPosition.value / 19.276
+        return scrollPosition.value / 19.259
     }
 }

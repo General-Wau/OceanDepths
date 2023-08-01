@@ -1,16 +1,18 @@
 package com.necromyd.oceandepths
 
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import kotlinx.coroutines.launch
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.CoroutineScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +21,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,32 +40,54 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             OceanDepthsTheme {
-                OceanDepthApp()
-                DepthMeter()
+                OceanDepthsApp()
             }
         }
     }
 }
 
 @Composable
-fun DepthMeter() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp), contentAlignment = Alignment.BottomEnd
-    ) {
-        Text(
-            text = viewModel.getDepth().toInt().toString() + "m",
-            color = Color.White,
-            fontSize = 40.sp
-        )
+fun OceanDepthsApp() {
+    val verticalScrollState = rememberScrollState()
+
+    Box {
+        OceanDepthApp(verticalScrollState)
+        DepthMeter(verticalScrollState)
     }
 
 }
 
 @Composable
-fun OceanDepthApp() {
-    val verticalScrollState = rememberScrollState()
+fun DepthMeter(verticalScrollState: ScrollState) {
+    val coroutineScope = rememberCoroutineScope()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp), contentAlignment = Alignment.BottomEnd
+    ) {
+        Column(verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
+            Image(painter = painterResource(id = R.drawable.sub),
+                contentDescription = "Submarine image button, click to scroll up",
+                modifier = Modifier
+                    .size(130.dp)
+                    .clickable {
+                        coroutineScope.launch {
+                            verticalScrollState.animateScrollTo(0)
+                        }
+                    })
+            Text(
+                text = viewModel.getDepth().toInt().toString() + "m",
+                color = Color.White,
+                fontSize = 40.sp
+            )
+        }
+
+    }
+}
+
+
+@Composable
+fun OceanDepthApp(verticalScrollState: ScrollState) {
     val skyColor = Color(0xFF70B5FA)
 
     Column(
@@ -71,7 +97,7 @@ fun OceanDepthApp() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(720.dp)
+                .height(700.dp)
                 .background(skyColor)
         ) {
             // Content of the first box (e.g., landmarks, sea creatures, etc.)
@@ -89,7 +115,7 @@ fun OceanDepthApp() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(100.dp)
                 .background(Color.DarkGray)
         ) {
             // Content of the second box (e.g., landmarks, sea creatures, etc.)
@@ -97,6 +123,7 @@ fun OceanDepthApp() {
         LaunchedEffect(verticalScrollState.value) {
             viewModel.scrollPosition.value = verticalScrollState.value
         }
+
     }
 }
 
@@ -184,7 +211,5 @@ fun TitleScreenContent() {
 @Composable
 fun DefaultPreview() {
     OceanDepthsTheme {
-        DepthMeter()
-        OceanDepthApp()
     }
 }
