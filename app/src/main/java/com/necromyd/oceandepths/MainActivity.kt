@@ -20,9 +20,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.necromyd.oceandepths.ui.theme.OceanDepthsTheme
+import kotlinx.coroutines.delay
 
 lateinit var viewModel: OceanViewModel
 
@@ -47,6 +49,7 @@ fun OceanDepthsApp() {
     Box {
         OceanDepthApp(verticalScrollState)
         DepthMeter(verticalScrollState)
+        BlinkingTextComposable()
         TitleScreenContent()
     }
 
@@ -103,7 +106,7 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                 .fillMaxWidth()
                 .height(80000.dp)
                 .background(
-                    brush = verticalGradientBackground(gradientPercentage = 0.11f)
+                    brush = verticalGradientBackground(gradientPercentage = 0.093f)
                 )
         ) {
             // Content of the second box (e.g., landmarks, sea creatures, etc.)
@@ -133,13 +136,58 @@ fun verticalGradientBackground(gradientPercentage: Float): Brush {
         endY = with(LocalDensity.current) { gradientHeightOcean.toPx() }
     )
 
+}
 
+@Composable
+fun BlinkingText(
+    text: String,
+    blinkingSpeed: Long = 700L,
+    textSize: TextUnit = 32.sp,
+    textColor: Color = Color.White
+) {
+    var visible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            visible = !visible
+            delay(blinkingSpeed)
+        }
+    }
+
+    if (visible) {
+        Text(
+            text = text,
+            fontSize = textSize,
+            color = textColor
+        )
+    }
+}
+
+@Composable
+fun BlinkingTextComposable() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            if(viewModel.isScrollEnabled.value && viewModel.scrollPosition.value < 750){
+                BlinkingText(
+                    text = "Scroll down and dive!"
+                )
+            }
+        }
+    }
 }
 
 @Composable
 fun TitleScreenContent() {
     var showContent by remember { mutableStateOf(true) }
-    val customButtonColor = MaterialTheme.colors.primaryVariant.copy(alpha = 0.8f)
+    val customButtonColor = MaterialTheme.colors.primaryVariant.copy(alpha = 0.4f)
 
     if (showContent) {
         Box(
@@ -148,17 +196,14 @@ fun TitleScreenContent() {
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text(
-                    text = "Ocean Depths",
-                    style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.primary,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                Image(
+                    painterResource(id = R.drawable.title),
+                    contentDescription = "How deep is the ocean?",
+                    modifier = Modifier.size(370.dp)
                 )
-                Spacer(modifier = Modifier.height(110.dp))
+                Spacer(modifier = Modifier.height(30.dp))
                 Button(
                     modifier = Modifier
                         .width(200.dp)
@@ -167,7 +212,7 @@ fun TitleScreenContent() {
                         showContent = !showContent
                         viewModel.isScrollEnabled.value = true
                     },
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(40.dp),
                     elevation = ButtonDefaults.elevation(
                         defaultElevation = 10.dp,
                         pressedElevation = 15.dp,
@@ -175,7 +220,7 @@ fun TitleScreenContent() {
                     ),
                     colors = ButtonDefaults.buttonColors(customButtonColor)
                 ) {
-                    Text(text = "Begin", fontSize = 25.sp)
+                    Text(text = "Find out!", fontSize = 25.sp, color = Color.White)
                 }
                 // Add any other UI elements or text at the bottom as needed.
                 Spacer(modifier = Modifier.height(120.dp))
