@@ -64,23 +64,25 @@ fun DepthMeter(verticalScrollState: ScrollState) {
             .padding(16.dp), contentAlignment = Alignment.BottomEnd
     ) {
         Column(verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
-            Image(painter = painterResource(id = R.drawable.sub),
-                contentDescription = "Submarine image button, click to scroll up",
-                modifier = Modifier
-                    .size(130.dp)
-                    .clickable {
-                        coroutineScope.launch {
-                            verticalScrollState.animateScrollTo(0)
-                        }
-                    })
-            Text(
-                text = viewModel.getDepth().toInt().toString() + "m",
-                color = Color.White,
-                fontSize = 40.sp
-            )
+            if (viewModel.isScrollEnabled.value) {
+                Image(painter = painterResource(id = R.drawable.sub),
+                    contentDescription = "Submarine image button, click to scroll up",
+                    modifier = Modifier
+                        .size(130.dp)
+                        .clickable {
+                            coroutineScope.launch {
+                                verticalScrollState.animateScrollTo(0)
+                            }
+                        })
+                Text(
+                    text = viewModel.getDepth().toInt().toString() + "m",
+                    color = Color.White,
+                    fontSize = 40.sp
+                )
+            }
         }
-
     }
+
 }
 
 
@@ -99,7 +101,12 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                 .height(700.dp)
                 .background(skyColor)
         ) {
-            // Content of the first box (e.g., landmarks, sea creatures, etc.)
+//            AnimatedCloud(
+//                cloudImage = painterResource(id = R.drawable.cloud),
+//                cloudSize = 64.dp,
+//                screenHeight = 700.dp,
+//                animationDuration = 100L
+//            )
         }
         Box(
             modifier = Modifier
@@ -175,7 +182,7 @@ fun BlinkingTextComposable() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if(viewModel.isScrollEnabled.value && viewModel.scrollPosition.value < 750){
+            if (viewModel.isScrollEnabled.value && viewModel.scrollPosition.value < 750) {
                 BlinkingText(
                     text = "Scroll down and dive!"
                 )
