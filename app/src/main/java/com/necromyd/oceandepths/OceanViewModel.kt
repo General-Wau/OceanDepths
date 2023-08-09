@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlin.random.Random
 
 class OceanViewModel : ViewModel() {
     var scrollPosition = mutableStateOf(0)
@@ -13,4 +14,5 @@ class OceanViewModel : ViewModel() {
     fun getDepth(): Double{
         return scrollPosition.value / 19.259
     }
+
 }

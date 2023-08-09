@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.necromyd.oceandepths.ui.theme.OceanDepthsTheme
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 lateinit var viewModel: OceanViewModel
 
@@ -89,7 +91,7 @@ fun DepthMeter(verticalScrollState: ScrollState) {
 @Composable
 fun OceanDepthApp(verticalScrollState: ScrollState) {
     val skyColor = Color(0xFF70B5FA)
-
+    var showSecondCloud by remember { mutableStateOf(false) }
 
     Column(
         modifier = if (viewModel.isScrollEnabled.value) Modifier
@@ -101,12 +103,16 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                 .height(700.dp)
                 .background(skyColor)
         ) {
-//            AnimatedCloud(
-//                cloudImage = painterResource(id = R.drawable.cloud),
-//                cloudSize = 64.dp,
-//                screenHeight = 700.dp,
-//                animationDuration = 100L
-//            )
+            if (viewModel.isScrollEnabled.value){
+                Cloud()
+                LaunchedEffect(Unit) {
+                    delay(Random.nextLong(3000, 7000)) // Adjust the delay duration as needed
+                    showSecondCloud = true
+                }
+                if (showSecondCloud) {
+                    Cloud()
+                }
+            }
         }
         Box(
             modifier = Modifier
@@ -116,7 +122,6 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                     brush = verticalGradientBackground(gradientPercentage = 0.093f)
                 )
         ) {
-            // Content of the second box (e.g., landmarks, sea creatures, etc.)
         }
         Box(
             modifier = Modifier
@@ -124,7 +129,6 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                 .height(100.dp)
                 .background(Color.DarkGray)
         ) {
-            // Content of the second box (e.g., landmarks, sea creatures, etc.)
         }
         LaunchedEffect(verticalScrollState.value) {
             viewModel.scrollPosition.value = verticalScrollState.value
@@ -145,6 +149,17 @@ fun verticalGradientBackground(gradientPercentage: Float): Brush {
 
 }
 
+/**
+ * Function that handles blinking text.
+ * It has a built in check to see if the composable is run for the first time,
+ * to fix incomplete/un-synchronized blink that usually appears after the main screen.
+ *
+ * @param text The text String that will blink
+ * @param blinkingSpeed The delay between each blink
+ * @param textSize The size of the blinking text
+ * @param textColor The color of the blinking text
+ * @see BlinkingTextComposable() for application of this composable
+ */
 @Composable
 fun BlinkingText(
     text: String,
@@ -153,9 +168,14 @@ fun BlinkingText(
     textColor: Color = Color.White
 ) {
     var visible by remember { mutableStateOf(true) }
+    var firstRun by rememberSaveable{ mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         while (true) {
+            if(firstRun) {
+                delay(500)
+                firstRun = false
+            }
             visible = !visible
             delay(blinkingSpeed)
         }

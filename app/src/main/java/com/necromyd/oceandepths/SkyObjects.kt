@@ -1,5 +1,6 @@
 package com.necromyd.oceandepths
 
+import android.util.Half.toFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -15,53 +16,44 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 @Composable
-fun AnimatedCloud(
-    cloudImage: Painter,
-    cloudSize: Dp = 64.dp,
-    screenHeight: Dp = 700.dp,
-    animationDuration: Long = 3000L
-) {
-    var cloudX by remember { mutableStateOf(0.dp) }
-    var cloudY by remember { mutableStateOf(0.dp) }
+fun Cloud() {
+    val infiniteTransition = rememberInfiniteTransition()
 
-    val screenWidth = with(LocalDensity.current) {
-        LocalContext.current.resources.displayMetrics.widthPixels.dp / density
-    }
+    var currentY by remember { mutableStateOf(Random.nextInt(0, 500).toFloat()) }
 
-    val screenHeightInt = screenHeight.value.toInt()
+    val xPosition by infiniteTransition.animateFloat(
+        initialValue = -100f, // Start off screen to the left
+        targetValue = 450f, // End off screen to the right
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 10000
+                0f at -100 with  LinearEasing
+                450f at 10000
+            } ,
+            repeatMode = RepeatMode.Restart
+        )
+    )
 
-
-
-    val cloudXAnimation = remember { Animatable(0f) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            cloudY = (0..(screenHeightInt - cloudSize.value.toInt())).random().dp
-
-            cloudXAnimation.animateTo(
-                targetValue = screenWidth.value + cloudSize.value,
-                animationSpec = tween(durationMillis = animationDuration.toInt(), easing = LinearEasing)
-            )
-
-            // Reset the position of the cloud to the starting position
-            cloudXAnimation.snapTo((-cloudSize).value)
-
-            // Wait for a short duration before respawning the cloud
-            delay(1000L)
+    // Listen to the animation changes
+    LaunchedEffect(xPosition) {
+        if (xPosition >= 440f) {
+            // Update currentY with a new random value
+            currentY = Random.nextInt(0, 500).toFloat()
         }
     }
 
-
-    Box(
+    Image(
+        painter = painterResource(id = R.drawable.cloud), // Replace with your cloud image
+        contentDescription = null,
         modifier = Modifier
-            .width(cloudSize)
-            .height(cloudSize)
-            .offset(x = cloudX, y = cloudY)
-    ) {
-        Image(painter = cloudImage, contentDescription = null)
-    }
+            .offset(x = xPosition.dp, y = currentY.dp)
+            .size(100.dp)
+    )
 }
