@@ -173,17 +173,21 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-
                 val coroutineScope = rememberCoroutineScope()
+
+                var previousTopPadding = 0.dp
+
                 viewModel.imageDataList.forEach { imageData ->
-                    val isVisible = viewModel.isImageVisible(
-                        imageData
-                    )
+                    val isVisible = viewModel.isImageVisible(imageData)
+
+                    val currentTopPadding = viewModel.positionImage(imageData)
+                    val calculatedPadding = currentTopPadding - previousTopPadding
+
+                    Spacer(modifier = Modifier.height(calculatedPadding))
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = viewModel.positionImage(imageData))
                     ) {
                         if (isVisible) {
                             Image(
@@ -191,19 +195,22 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(imageData.size.dp)
-                                    .padding(start = 10.dp)
+                                    .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
                                     .clickable {
                                         coroutineScope.launch {
                                             viewModel.selectImage(imageData)
                                         }
                                     },
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.FillWidth
                             )
                         }
                         if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {
                             TextPopUp()
                         }
                     }
+
+                    // Update previousTopPadding for the next iteration
+                    previousTopPadding = currentTopPadding + imageData.size.dp  // Add image size to padding
                 }
             }
         }

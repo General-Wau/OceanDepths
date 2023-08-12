@@ -18,8 +18,11 @@ class OceanViewModel : ViewModel() {
     val imageDataList = listOf(
         ImageData(R.drawable.cloud, "Image at depth 25, long description long description " +
                 "long description long description long description long description long description " +
-                "long description long description long description long description long description ", 45, 150f),
-        ImageData(R.drawable.cloud, "Image at depth 50", 450, 150f)
+                "long description long description long description long description long description ", 25, 150f),
+        ImageData(R.drawable.cloud, "Image at depth 50", 50, 250f),
+        ImageData(R.drawable.cloud, "Image at depth 50", 165, 120f),
+        ImageData(R.drawable.cloud, "Image at depth 50", 205, 75f),
+        ImageData(R.drawable.cloud, "Image at depth 50", 300, 100f)
 
     )
 
@@ -42,10 +45,9 @@ class OceanViewModel : ViewModel() {
         return (meters.toFloat() / totalMeters * totalDp).dp
     }
 
-    fun positionImage(imageData: ImageData): Dp{
+    fun positionImage(imageData: ImageData): Dp {
         var place = metersToDp(imageData.depth)
-        var offset = place - (imageData.size/2).dp
-        return offset
+        return place - (imageData.size / 2).dp
     }
 
 }
