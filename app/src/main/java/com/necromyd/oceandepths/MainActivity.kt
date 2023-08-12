@@ -3,6 +3,9 @@ package com.necromyd.oceandepths
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import kotlinx.coroutines.launch
@@ -14,8 +17,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +34,7 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 lateinit var viewModel: OceanViewModel
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +59,49 @@ fun OceanDepthsApp() {
         DepthMeter(verticalScrollState)
         BlinkingTextComposable()
         TitleScreenContent()
+        if (viewModel.showTextPopUp){
+            TextPopUp()
+        }
     }
 
+}
+
+@Composable
+fun TextPopUp() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(0.7f)
+                .background(Color.Black.copy(alpha = 0.3f))
+                .animateContentSize(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = LinearOutSlowInEasing
+                    )
+                )
+                .clickable {
+                    viewModel.showTextPopUp = false
+                }
+        ) {
+            if (viewModel.showTextPopUp) {
+                Text(text = "", textAlign = TextAlign.Center, fontSize = 14.sp, color = Color.White)
+            }
+        }
+        Text(
+            text = "Click to close",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            textAlign = TextAlign.Center,
+            fontSize = 18.sp,
+            color = Color.Yellow
+        )
+    }
 }
 
 @Composable
@@ -66,7 +113,7 @@ fun DepthMeter(verticalScrollState: ScrollState) {
             .padding(16.dp), contentAlignment = Alignment.BottomEnd
     ) {
         Column(verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
-            if (viewModel.isScrollEnabled.value) {
+            if (viewModel.isScrollEnabled) {
                 Image(painter = painterResource(id = R.drawable.sub),
                     contentDescription = "Submarine image button, click to scroll up",
                     modifier = Modifier
@@ -94,7 +141,7 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
     var showSecondCloud by remember { mutableStateOf(false) }
 
     Column(
-        modifier = if (viewModel.isScrollEnabled.value) Modifier
+        modifier = if (viewModel.isScrollEnabled) Modifier
             .verticalScroll(verticalScrollState) else Modifier
     ) {
         Box(
@@ -103,7 +150,7 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                 .height(700.dp)
                 .background(skyColor)
         ) {
-            if (viewModel.isScrollEnabled.value){
+            if (viewModel.isScrollEnabled) {
                 Cloud()
                 LaunchedEffect(Unit) {
                     delay(Random.nextLong(3000, 7000)) // Adjust the delay duration as needed
@@ -122,6 +169,43 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
                     brush = verticalGradientBackground(gradientPercentage = 0.093f)
                 )
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+
+                val coroutineScope = rememberCoroutineScope()
+                viewModel.imageDataList.forEach { imageData ->
+                    val isVisible = viewModel.isImageVisible(
+                        imageData
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = viewModel.positionImage(imageData))
+                    ) {
+                        if (isVisible) {
+                            Image(
+                                painter = painterResource(id = imageData.resource),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(imageData.size.dp)
+                                    .padding(start = 10.dp)
+                                    .clickable {
+                                        coroutineScope.launch {
+                                            viewModel.selectImage(imageData)
+                                        }
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {
+                            TextPopUp()
+                        }
+                    }
+                }
+            }
         }
         Box(
             modifier = Modifier
@@ -168,11 +252,11 @@ fun BlinkingText(
     textColor: Color = Color.White
 ) {
     var visible by remember { mutableStateOf(true) }
-    var firstRun by rememberSaveable{ mutableStateOf(true) }
+    var firstRun by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         while (true) {
-            if(firstRun) {
+            if (firstRun) {
                 delay(500)
                 firstRun = false
             }
@@ -202,7 +286,7 @@ fun BlinkingTextComposable() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (viewModel.isScrollEnabled.value && viewModel.scrollPosition.value < 750) {
+            if (viewModel.isScrollEnabled && viewModel.scrollPosition.value < 750) {
                 BlinkingText(
                     text = "Scroll down and dive!"
                 )
@@ -237,7 +321,7 @@ fun TitleScreenContent() {
                         .height(50.dp),
                     onClick = {
                         showContent = !showContent
-                        viewModel.isScrollEnabled.value = true
+                        viewModel.isScrollEnabled = true
                     },
                     shape = RoundedCornerShape(40.dp),
                     elevation = ButtonDefaults.elevation(
