@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
+/**
+ * This composable handles moving clouds in the sky box within OceanDepth composable
+ */
 @Composable
 fun Cloud() {
     val infiniteTransition = rememberInfiniteTransition()
@@ -29,8 +32,8 @@ fun Cloud() {
     var currentY by remember { mutableStateOf(Random.nextInt(0, 500).toFloat()) }
 
     val xPosition by infiniteTransition.animateFloat(
-        initialValue = -100f, // Start off screen to the left
-        targetValue = 450f, // End off screen to the right
+        initialValue = -100f,
+        targetValue = 450f,
         animationSpec = infiniteRepeatable(
             animation = keyframes {
                 durationMillis = 10000
@@ -41,16 +44,14 @@ fun Cloud() {
         )
     )
 
-    // Listen to the animation changes
     LaunchedEffect(xPosition) {
         if (xPosition >= 440f) {
-            // Update currentY with a new random value
             currentY = Random.nextInt(0, 500).toFloat()
         }
     }
 
     Image(
-        painter = painterResource(id = R.drawable.cloud), // Replace with your cloud image
+        painter = painterResource(id = R.drawable.cloud),
         contentDescription = null,
         modifier = Modifier
             .offset(x = xPosition.dp, y = currentY.dp)

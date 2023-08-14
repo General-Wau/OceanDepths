@@ -17,13 +17,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -50,12 +48,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * The top composable that organizes the drawing order of all composables in the application
+ */
 @Composable
 fun OceanDepthsApp() {
     val verticalScrollState = rememberScrollState()
 
     Box {
-        OceanDepthApp(verticalScrollState)
+        OceanDepth(verticalScrollState)
         DepthMeter(verticalScrollState)
         BlinkingTextComposable()
         TitleScreenContent()
@@ -66,6 +67,9 @@ fun OceanDepthsApp() {
 
 }
 
+/**
+ * Description text that appears when an image in the ocean is clicked
+ */
 @Composable
 fun TextPopUp() {
     Column(
@@ -104,6 +108,11 @@ fun TextPopUp() {
     }
 }
 
+/**
+ * This composable handles the ship image button and the text that displays current depth
+ * It persists on the screen
+ * @param verticalScrollState Current state of the vertical scroll
+ */
 @Composable
 fun DepthMeter(verticalScrollState: ScrollState) {
     val coroutineScope = rememberCoroutineScope()
@@ -134,9 +143,13 @@ fun DepthMeter(verticalScrollState: ScrollState) {
 
 }
 
-
+/**
+ * The primary composable of the application
+ * It draws three boxes , sky , ocean and ground
+ * @param verticalScrollState The current state of the vertical scroll
+ */
 @Composable
-fun OceanDepthApp(verticalScrollState: ScrollState) {
+fun OceanDepth(verticalScrollState: ScrollState) {
     val skyColor = Color(0xFF70B5FA)
     var showSecondCloud by remember { mutableStateOf(false) }
 
@@ -228,6 +241,12 @@ fun OceanDepthApp(verticalScrollState: ScrollState) {
     }
 }
 
+/**
+ * Draws the gradient of the ocean from blue to black
+ * The gradient ends at 1000m
+ * @param gradientPercentage This decides how far the gradient will go from blue to black
+ * @return Returns the Brush object that will paint the gradient
+ */
 @Composable
 fun verticalGradientBackground(gradientPercentage: Float): Brush {
     val gradientHeightOcean = 80000.dp * gradientPercentage
@@ -241,7 +260,7 @@ fun verticalGradientBackground(gradientPercentage: Float): Brush {
 }
 
 /**
- * Function that handles blinking text.
+ * Composable that handles blinking text.
  * It has a built in check to see if the composable is run for the first time,
  * to fix incomplete/un-synchronized blink that usually appears after the main screen.
  *
@@ -281,6 +300,9 @@ fun BlinkingText(
     }
 }
 
+/**
+ * Composable that displays the blinking text
+ */
 @Composable
 fun BlinkingTextComposable() {
     Box(
@@ -302,6 +324,10 @@ fun BlinkingTextComposable() {
     }
 }
 
+/**
+ * Composable that displays the title image and a button
+ * It is drawn over everything and will hide most of the features until the button is pressed
+ */
 @Composable
 fun TitleScreenContent() {
     var showContent by remember { mutableStateOf(true) }
