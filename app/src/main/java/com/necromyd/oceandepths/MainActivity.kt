@@ -20,15 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.necromyd.oceandepths.ui.theme.OceanDepthsTheme
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 lateinit var viewModel: OceanViewModel
@@ -116,14 +119,30 @@ fun TextPopUp() {
 @Composable
 fun DepthMeter(verticalScrollState: ScrollState) {
     val coroutineScope = rememberCoroutineScope()
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val maxDepth = 10905 // Maximum depth value in your range
+
+    val totalLayoutHeightDp = 80000.dp // Total height of your layout in dp
+
+    val totalLayoutHeightPx = with(LocalDensity.current) {
+        totalLayoutHeightDp.toPx()
+    }
+
+    val normalizedScrollPosition = verticalScrollState.value / totalLayoutHeightPx
+    val depth = normalizedScrollPosition * maxDepth
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp), contentAlignment = Alignment.BottomEnd
+            .padding(16.dp),
+        contentAlignment = Alignment.BottomEnd
     ) {
         Column(verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
             if (viewModel.isScrollEnabled) {
-                Image(painter = painterResource(id = R.drawable.sub),
+                Image(
+                    painter = painterResource(id = R.drawable.sub),
                     contentDescription = "Submarine image button, click to scroll up",
                     modifier = Modifier
                         .size(130.dp)
@@ -131,16 +150,16 @@ fun DepthMeter(verticalScrollState: ScrollState) {
                             coroutineScope.launch {
                                 verticalScrollState.animateScrollTo(0)
                             }
-                        })
+                        }
+                )
                 Text(
-                    text = viewModel.getDepth().toInt().toString() + "m",
+                    text = "${depth.roundToInt()} m",
                     color = Color.White,
                     fontSize = 40.sp
                 )
             }
         }
     }
-
 }
 
 /**
@@ -153,6 +172,9 @@ fun OceanDepth(verticalScrollState: ScrollState) {
     val skyColor = Color(0xFF70B5FA)
     var showSecondCloud by remember { mutableStateOf(false) }
 
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val skyBoxHeight = (screenHeight * 0.85f) // Set the desired proportion to 85%
+
     Column(
         modifier = if (viewModel.isScrollEnabled) Modifier
             .verticalScroll(verticalScrollState) else Modifier
@@ -160,7 +182,7 @@ fun OceanDepth(verticalScrollState: ScrollState) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(700.dp)
+                .height(skyBoxHeight) // Use the calculated skyBoxHeight
                 .background(skyColor)
         ) {
             if (viewModel.isScrollEnabled) {
@@ -202,24 +224,24 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-                        if (isVisible) {
-                            Image(
-                                painter = painterResource(id = imageData.resource),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(imageData.size.dp)
-                                    .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
-                                    .clickable {
-                                        coroutineScope.launch {
-                                            viewModel.selectImage(imageData)
-                                        }
-                                    },
-                                contentScale = ContentScale.FillWidth
-                            )
-                        }
-                        if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {
-                            TextPopUp()
-                        }
+//                        if (isVisible) {
+//                            Image(
+//                                painter = painterResource(id = imageData.resource),
+//                                contentDescription = null,
+//                                modifier = Modifier
+//                                    .size(imageData.size.dp)
+//                                    .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
+//                                    .clickable {
+//                                        coroutineScope.launch {
+//                                            viewModel.selectImage(imageData)
+//                                        }
+//                                    },
+//                                contentScale = ContentScale.FillWidth
+//                            )
+//                        }
+//                        if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {
+//                            TextPopUp()
+//                        }
                     }
 
                     // Update previousTopPadding for the next iteration

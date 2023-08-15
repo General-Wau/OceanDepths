@@ -37,7 +37,7 @@ class OceanViewModel : ViewModel() {
      * @return Returns converted dp into meters
      */
     fun getDepth(): Double {
-        return scrollPosition.value / 19.259
+        return scrollPosition.value / 19.257
     }
 
     /**
