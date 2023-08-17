@@ -223,20 +223,21 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .height(imageData.size.dp)
                     ) {
                         if (isVisible) {
                             Image(
                                 painter = painterResource(id = imageData.resource),
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .size(imageData.size.dp)
+                                    .fillMaxSize()
                                     .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
                                     .clickable {
                                         coroutineScope.launch {
                                             viewModel.selectImage(imageData)
                                         }
                                     },
-                                contentScale = ContentScale.FillWidth
+                                contentScale = ContentScale.FillHeight
                             )
                         }
                         if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {

@@ -21,13 +21,13 @@ class OceanViewModel : ViewModel() {
         ImageData(
             R.drawable.cloud,
             "First cloud",
-            25,
+            1000,
             150f
         ),
-        ImageData(R.drawable.cloud, "2nd cloud", 70, 250f),
-        ImageData(R.drawable.cloud, "3rd cloud", 165, 120f),
-        ImageData(R.drawable.cloud, "4th cloud", 205, 75f),
-        ImageData(R.drawable.cloud, "5th cloud", 3000, 170f)
+        ImageData(R.drawable.cloud, "2nd cloud", 2000, 100f),
+        ImageData(R.drawable.cloud, "3rd cloud", 5000, 120f),
+//        ImageData(R.drawable.cloud, "4th cloud", 205, 75f),
+//        ImageData(R.drawable.cloud, "5th cloud", 3000, 170f)
 
     )
 
@@ -70,7 +70,7 @@ class OceanViewModel : ViewModel() {
      */
     fun positionImage(imageData: ImageData): Dp {
         val place = metersToDp(imageData.depth)
-        return place - (imageData.size / 2).dp
+        return place
     }
 
 }
