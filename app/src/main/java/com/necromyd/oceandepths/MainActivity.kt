@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -120,17 +121,16 @@ fun TextPopUp() {
 fun DepthMeter(verticalScrollState: ScrollState) {
     val coroutineScope = rememberCoroutineScope()
 
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val maxDepth = 10905 // Maximum depth value in your range
 
-    val totalLayoutHeightDp = 80000.dp // Total height of your layout in dp
+    val totalLayoutHeightDp = 70000.dp // Total height of your layout in dp
 
     val totalLayoutHeightPx = with(LocalDensity.current) {
         totalLayoutHeightDp.toPx()
     }
 
     val normalizedScrollPosition = verticalScrollState.value / totalLayoutHeightPx
-    val depth = normalizedScrollPosition * maxDepth
+    viewModel.depth = normalizedScrollPosition * maxDepth
 
 
     Box(
@@ -153,7 +153,7 @@ fun DepthMeter(verticalScrollState: ScrollState) {
                         }
                 )
                 Text(
-                    text = "${depth.roundToInt()} m",
+                    text = "${viewModel.depth.roundToInt()} m",
                     color = Color.White,
                     fontSize = 40.sp
                 )
@@ -199,7 +199,7 @@ fun OceanDepth(verticalScrollState: ScrollState) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80000.dp)
+                .height(70000.dp)
                 .background(
                     brush = verticalGradientBackground(gradientPercentage = 0.093f)
                 )
@@ -224,29 +224,29 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-//                        if (isVisible) {
-//                            Image(
-//                                painter = painterResource(id = imageData.resource),
-//                                contentDescription = null,
-//                                modifier = Modifier
-//                                    .size(imageData.size.dp)
-//                                    .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
-//                                    .clickable {
-//                                        coroutineScope.launch {
-//                                            viewModel.selectImage(imageData)
-//                                        }
-//                                    },
-//                                contentScale = ContentScale.FillWidth
-//                            )
-//                        }
-//                        if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {
-//                            TextPopUp()
-//                        }
+                        if (isVisible) {
+                            Image(
+                                painter = painterResource(id = imageData.resource),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(imageData.size.dp)
+                                    .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
+                                    .clickable {
+                                        coroutineScope.launch {
+                                            viewModel.selectImage(imageData)
+                                        }
+                                    },
+                                contentScale = ContentScale.FillWidth
+                            )
+                        }
+                        if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {
+                            TextPopUp()
+                        }
                     }
 
                     // Update previousTopPadding for the next iteration
                     previousTopPadding = currentTopPadding + imageData.size.dp  // Add image size to padding
-                }
+            }
             }
         }
         Box(
@@ -271,7 +271,7 @@ fun OceanDepth(verticalScrollState: ScrollState) {
  */
 @Composable
 fun verticalGradientBackground(gradientPercentage: Float): Brush {
-    val gradientHeightOcean = 80000.dp * gradientPercentage
+    val gradientHeightOcean = 70000.dp * gradientPercentage
 
     return Brush.verticalGradient(
         colors = listOf(Color.Blue, Color.Black),
