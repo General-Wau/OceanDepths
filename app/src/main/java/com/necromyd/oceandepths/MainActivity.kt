@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.necromyd.oceandepths.ui.theme.OceanDepthsTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -84,7 +85,7 @@ fun TextPopUp() {
         Box(
             modifier = Modifier
                 .fillMaxSize(0.7f)
-                .background(Color.Black.copy(alpha = 0.3f))
+                .background(Color.Black.copy(alpha = 0.4f))
                 .animateContentSize(
                     animationSpec = tween(
                         durationMillis = 300,
@@ -96,7 +97,21 @@ fun TextPopUp() {
                 }
         ) {
             if (viewModel.showTextPopUp) {
-                Text(text = "", textAlign = TextAlign.Center, fontSize = 14.sp, color = Color.White)
+                viewModel.selectedImage?.let {
+                    Column {
+                        Text(
+                            modifier = Modifier.padding(bottom = 10.dp),
+                            text = it.title,
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp,
+                            color = Color.White
+                        )
+                        Text(
+                            text = it.text,
+                            textAlign = TextAlign.Center, fontSize = 16.sp, color = Color.White
+                        )
+                    }
+                }
             }
         }
         Text(
@@ -236,9 +251,6 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                                 contentScale = ContentScale.FillHeight
                             )
                         }
-                        if (viewModel.showTextPopUp && viewModel.selectedImage == imageData) {
-                            TextPopUp()
-                        }
                     }
                     previousTopPadding =
                         currentTopPadding + imageData.size.dp
@@ -312,7 +324,8 @@ fun BlinkingText(
         Text(
             text = text,
             fontSize = textSize,
-            color = textColor
+            color = textColor,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -349,6 +362,11 @@ fun BlinkingTextComposable() {
 fun TitleScreenContent() {
     var showContent by remember { mutableStateOf(true) }
     val customButtonColor = MaterialTheme.colors.primaryVariant.copy(alpha = 0.4f)
+    val imageResId = if (Locale.getDefault().language == "sr") {
+        R.drawable.title_sr
+    } else {
+        R.drawable.title_en
+    }
 
     if (showContent) {
         Box(
@@ -360,7 +378,7 @@ fun TitleScreenContent() {
                 modifier = Modifier.padding(16.dp)
             ) {
                 Image(
-                    painterResource(id = R.drawable.title),
+                    painterResource(id = imageResId),
                     contentDescription = stringResource(id = R.string.main_title_description),
                     modifier = Modifier.size(370.dp)
                 )
@@ -381,7 +399,11 @@ fun TitleScreenContent() {
                     ),
                     colors = ButtonDefaults.buttonColors(customButtonColor)
                 ) {
-                    Text(text = stringResource(id = R.string.main_button), fontSize = 25.sp, color = Color.White)
+                    Text(
+                        text = stringResource(id = R.string.main_button),
+                        fontSize = 25.sp,
+                        color = Color.White
+                    )
                 }
                 Spacer(modifier = Modifier.height(120.dp))
             }

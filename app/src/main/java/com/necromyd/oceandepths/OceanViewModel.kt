@@ -8,7 +8,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 
 class OceanViewModel : ViewModel() {
-    data class ImageData(val resource: Int, val text: String, val depth: Int, val size: Float)
+    data class ImageData(
+        val resource: Int,
+        val title: String,
+        val text: String,
+        val depth: Int,
+        val size: Float
+    )
 
     var scrollPosition = mutableStateOf(0)
     var isScrollEnabled by mutableStateOf(false)
@@ -18,13 +24,19 @@ class OceanViewModel : ViewModel() {
 
     val imageDataList = listOf(
         ImageData(
-            R.drawable.cloud,
-            "First cloud",
+            R.drawable.cloud, "First Cloud",
+            "info info info info info info info info info info info info info info info info info " +
+                    "info info info info info info info info info info info info info info info info info " +
+                    "info info info info info info info info info info info info info info info info ",
             1000,
             150f
         ),
-        ImageData(R.drawable.cloud, "2nd cloud", 2000, 100f),
-        ImageData(R.drawable.cloud, "3rd cloud", 5000, 120f),
+        ImageData(
+            R.drawable.cloud, "2nd cloud", "info info info info info info info info info " +
+                    "info info info info info info info info info info info info " +
+                    "info info info ", 2000, 100f
+        ),
+        ImageData(R.drawable.cloud, "3rd cloud", "info info info", 5000, 120f),
 //        ImageData(R.drawable.cloud, "4th cloud", 205, 75f),
 //        ImageData(R.drawable.cloud, "5th cloud", 3000, 170f)
 
