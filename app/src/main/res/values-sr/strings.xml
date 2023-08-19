@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dubine Okeana</string>
+    <string name="close_popup_text">Sklonite dodirom</string>
+    <string name="submarine_button_description">Slika podmornice, pritisnite za vracanje na vrh</string>
+    <string name="blinking_text">Povucite na gore i zaronite!</string>
+    <string name="main_title_description">Koliko je dubok okean?</string>
+    <string name="main_button">Otkrijte!</string>
+    <string name="credits">Aplikacija od Necromyd , 2023</string>
+</resources>

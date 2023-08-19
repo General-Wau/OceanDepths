@@ -1,25 +1,13 @@
 package com.necromyd.oceandepths
 
-import android.util.Half.toFloat
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 /**
@@ -28,7 +16,6 @@ import kotlin.random.Random
 @Composable
 fun Cloud() {
     val infiniteTransition = rememberInfiniteTransition()
-
     var currentY by remember { mutableStateOf(Random.nextInt(0, 500).toFloat()) }
 
     val xPosition by infiniteTransition.animateFloat(

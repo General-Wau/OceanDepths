@@ -1,6 +1,5 @@
 package com.necromyd.oceandepths
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -43,34 +42,15 @@ class OceanViewModel : ViewModel() {
     }
 
     /**
-     * Assigns the current image object to a field so it can be used later and survive config changes
-     * @param imageData Current Image Object
-     */
-    fun selectImage(imageData: ImageData) {
-        selectedImage = imageData
-        viewModel.showTextPopUp = true
-    }
-
-    /**
-     * Converts the height of the second box in the OceanDepth composable from dp to meters
-     * @param meters Depth at which the current image will be placed
-     * @return Returns the dp at which the image will be displayed
-     */
-    private fun metersToDp(meters: Int): Dp {
-        val totalMeters = 10905
-        val totalDp = 70000
-        return (meters.toFloat() / totalMeters * totalDp).dp
-    }
-
-    /**
      * Converts the image depth in meters to dp and moves it up by half its height so its centered
      * vertically at its depth
      * @param imageData Current object with image data to process
      * @return Returns the exact vertical position in dp at which to place the image
      */
     fun positionImage(imageData: ImageData): Dp {
-        val place = metersToDp(imageData.depth)
-        return place
+        val totalMeters = 10910
+        val totalDp = 70000
+        val meters = (imageData.depth.toFloat() / totalMeters * totalDp).dp
+        return meters - (imageData.size / 2).dp
     }
-
 }

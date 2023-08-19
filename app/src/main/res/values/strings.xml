@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">OceanDepths</string>
+    <string name="app_name">Ocean Depths</string>
+    <string name="close_popup_text">Tap to close</string>
+    <string name="submarine_button_description">Submarine image button, tap to scroll to the top</string>
+    <string name="blinking_text">Scroll down and dive!</string>
+    <string name="main_title_description">How deep is the ocean?</string>
+    <string name="main_button">Find out!</string>
+    <string name="credits">App by Necromyd , 2023</string>
 </resources>

@@ -8,30 +8,29 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import kotlinx.coroutines.launch
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.necromyd.oceandepths.ui.theme.OceanDepthsTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -64,7 +63,7 @@ fun OceanDepthsApp() {
         DepthMeter(verticalScrollState)
         BlinkingTextComposable()
         TitleScreenContent()
-        if (viewModel.showTextPopUp){
+        if (viewModel.showTextPopUp) {
             TextPopUp()
         }
     }
@@ -101,7 +100,7 @@ fun TextPopUp() {
             }
         }
         Text(
-            text = "Click to close",
+            text = stringResource(id = R.string.close_popup_text),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
@@ -121,10 +120,8 @@ fun TextPopUp() {
 fun DepthMeter(verticalScrollState: ScrollState) {
     val coroutineScope = rememberCoroutineScope()
 
-    val maxDepth = 10905 // Maximum depth value in your range
-
-    val totalLayoutHeightDp = 70000.dp // Total height of your layout in dp
-
+    val maxDepth = 10910
+    val totalLayoutHeightDp = 70000.dp
     val totalLayoutHeightPx = with(LocalDensity.current) {
         totalLayoutHeightDp.toPx()
     }
@@ -143,7 +140,7 @@ fun DepthMeter(verticalScrollState: ScrollState) {
             if (viewModel.isScrollEnabled) {
                 Image(
                     painter = painterResource(id = R.drawable.sub),
-                    contentDescription = "Submarine image button, click to scroll up",
+                    contentDescription = stringResource(id = R.string.submarine_button_description),
                     modifier = Modifier
                         .size(130.dp)
                         .clickable {
@@ -171,9 +168,8 @@ fun DepthMeter(verticalScrollState: ScrollState) {
 fun OceanDepth(verticalScrollState: ScrollState) {
     val skyColor = Color(0xFF70B5FA)
     var showSecondCloud by remember { mutableStateOf(false) }
-
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val skyBoxHeight = (screenHeight * 0.85f) // Set the desired proportion to 85%
+    val skyBoxHeight = (screenHeight * 0.85f)
 
     Column(
         modifier = if (viewModel.isScrollEnabled) Modifier
@@ -182,13 +178,13 @@ fun OceanDepth(verticalScrollState: ScrollState) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(skyBoxHeight) // Use the calculated skyBoxHeight
+                .height(skyBoxHeight)
                 .background(skyColor)
         ) {
             if (viewModel.isScrollEnabled) {
                 Cloud()
                 LaunchedEffect(Unit) {
-                    delay(Random.nextLong(3000, 7000)) // Adjust the delay duration as needed
+                    delay(Random.nextLong(3000, 7000))
                     showSecondCloud = true
                 }
                 if (showSecondCloud) {
@@ -209,12 +205,11 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                     .fillMaxSize()
             ) {
                 val coroutineScope = rememberCoroutineScope()
-
                 var previousTopPadding = 0.dp
 
                 viewModel.imageDataList.forEach { imageData ->
-                    val isVisible = viewModel.isImageVisible(imageData)
 
+                    val isVisible = viewModel.isImageVisible(imageData)
                     val currentTopPadding = viewModel.positionImage(imageData)
                     val calculatedPadding = currentTopPadding - previousTopPadding
 
@@ -234,7 +229,8 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                                     .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
                                     .clickable {
                                         coroutineScope.launch {
-                                            viewModel.selectImage(imageData)
+                                            viewModel.selectedImage = imageData
+                                            viewModel.showTextPopUp = true
                                         }
                                     },
                                 contentScale = ContentScale.FillHeight
@@ -244,10 +240,9 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                             TextPopUp()
                         }
                     }
-
-                    // Update previousTopPadding for the next iteration
-                    previousTopPadding = currentTopPadding + imageData.size.dp  // Add image size to padding
-            }
+                    previousTopPadding =
+                        currentTopPadding + imageData.size.dp
+                }
             }
         }
         Box(
@@ -260,7 +255,6 @@ fun OceanDepth(verticalScrollState: ScrollState) {
         LaunchedEffect(verticalScrollState.value) {
             viewModel.scrollPosition.value = verticalScrollState.value
         }
-
     }
 }
 
@@ -340,7 +334,7 @@ fun BlinkingTextComposable() {
         ) {
             if (viewModel.isScrollEnabled && viewModel.scrollPosition.value < 750) {
                 BlinkingText(
-                    text = "Scroll down and dive!"
+                    text = stringResource(id = R.string.blinking_text)
                 )
             }
         }
@@ -367,7 +361,7 @@ fun TitleScreenContent() {
             ) {
                 Image(
                     painterResource(id = R.drawable.title),
-                    contentDescription = "How deep is the ocean?",
+                    contentDescription = stringResource(id = R.string.main_title_description),
                     modifier = Modifier.size(370.dp)
                 )
                 Spacer(modifier = Modifier.height(30.dp))
@@ -387,9 +381,8 @@ fun TitleScreenContent() {
                     ),
                     colors = ButtonDefaults.buttonColors(customButtonColor)
                 ) {
-                    Text(text = "Find out!", fontSize = 25.sp, color = Color.White)
+                    Text(text = stringResource(id = R.string.main_button), fontSize = 25.sp, color = Color.White)
                 }
-                // Add any other UI elements or text at the bottom as needed.
                 Spacer(modifier = Modifier.height(120.dp))
             }
         }
@@ -405,7 +398,7 @@ fun TitleScreenContent() {
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    text = "App by Necromyd , 2023",
+                    text = stringResource(id = R.string.credits),
                     fontSize = 15.sp,
                     color = Color.Gray
                 )
@@ -414,9 +407,9 @@ fun TitleScreenContent() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    OceanDepthsTheme {
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    OceanDepthsTheme {
+//    }
+//}
