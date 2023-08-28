@@ -144,6 +144,11 @@ fun DepthMeter(verticalScrollState: ScrollState) {
     val normalizedScrollPosition = verticalScrollState.value / totalLayoutHeightPx
     viewModel.depth = normalizedScrollPosition * maxDepth
 
+    val submarineImage = if (Locale.getDefault().language == "sr") {
+        R.drawable.subrs
+    } else {
+        R.drawable.sub
+    }
 
     Box(
         modifier = Modifier
@@ -154,7 +159,7 @@ fun DepthMeter(verticalScrollState: ScrollState) {
         Column(verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
             if (viewModel.isScrollEnabled) {
                 Image(
-                    painter = painterResource(id = R.drawable.sub),
+                    painter = painterResource(submarineImage),
                     contentDescription = stringResource(id = R.string.submarine_button_description),
                     modifier = Modifier
                         .size(130.dp)
