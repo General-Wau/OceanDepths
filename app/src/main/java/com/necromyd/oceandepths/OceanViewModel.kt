@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 
 class OceanViewModel : ViewModel() {
     data class ImageData(
-        val resource: Int,
+        val resource: Int?,
         val title: String,
         val text: String,
         val depth: Int,
@@ -24,11 +24,12 @@ class OceanViewModel : ViewModel() {
 
     val imageDataList = listOf(
         ImageData(
-            R.drawable.cloud, "First Cloud",
-            "info info info info info info info info info info info info info info info info info " +
-                    "info info info info info info info info info info info info info info info info info " +
-                    "info info info info info info info info info info info info info info info info ",
-            1000,
+            null, "Midnight Zone",
+            "The midnight zone spooky very very spooky spooky very very spookyspooky very very " +
+                    "spookyspooky very very spookyspooky very very spookyspooky very very spooky" +
+                    "spooky very very spookyspooky very very spookyspooky very very spookyspooky " +
+                    "very very spookyspooky very very spookyspooky very very spooky",
+            300,
             150f
         ),
         ImageData(
@@ -50,19 +51,23 @@ class OceanViewModel : ViewModel() {
      * @return Returns a boolean if image is visible
      */
     fun isImageVisible(imageData: ImageData): Boolean {
-        return (depth - imageData.depth).dp < 500.dp
+        return (depth - imageData.depth).dp < 500.dp || imageData.resource == null
     }
 
     /**
      * Converts the image depth in meters to dp and moves it up by half its height so its centered
-     * vertically at its depth
+     * vertically at its depth or returns the depth for the text if image is null
      * @param imageData Current object with image data to process
-     * @return Returns the exact vertical position in dp at which to place the image
+     * @return Returns the exact vertical position in dp at which to place the image or its text
      */
     fun positionImage(imageData: ImageData): Dp {
         val totalMeters = 10910
         val totalDp = 70000
-        val meters = (imageData.depth.toFloat() / totalMeters * totalDp).dp
-        return meters - (imageData.size / 2).dp
+        val meters = if (imageData.resource == null) {
+            imageData.depth.toFloat() / totalMeters * totalDp
+        } else {
+            (imageData.depth.toFloat() / totalMeters * totalDp) - (imageData.size / 2)
+        }
+        return meters.dp
     }
 }
