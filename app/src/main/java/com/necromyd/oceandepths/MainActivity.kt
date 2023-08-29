@@ -85,7 +85,7 @@ fun TextPopUp() {
         Box(
             modifier = Modifier
                 .fillMaxSize(0.7f)
-                .background(Color.Black.copy(alpha = 0.4f))
+                .background(Color.Black.copy(alpha = 0.6f))
                 .animateContentSize(
                     animationSpec = tween(
                         durationMillis = 300,
