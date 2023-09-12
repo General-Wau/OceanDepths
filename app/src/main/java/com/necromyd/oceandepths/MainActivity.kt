@@ -235,18 +235,18 @@ fun OceanDepth(verticalScrollState: ScrollState) {
 
                     Spacer(modifier = Modifier.height(calculatedPadding))
 
-                    if (imageData.resource != null && isVisible) {
-                        // Display image
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(imageData.size.dp)
-                        ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(imageData.size.dp)
+                    ) {
+                        if (isVisible) {
                             Image(
                                 painter = painterResource(id = imageData.resource),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .fillMaxSize()
+                                    .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
                                     .clickable {
                                         coroutineScope.launch {
                                             viewModel.selectedImage = imageData
@@ -256,27 +256,9 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                                 contentScale = ContentScale.FillHeight
                             )
                         }
-                    } else {
-                        // Display text
-                        Text(
-                            text = imageData.title,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 140.dp, top = 0.dp, bottom = 0.dp)
-                                .clickable {
-                                    coroutineScope.launch {
-                                        viewModel.selectedImage = imageData
-                                        viewModel.showTextPopUp = true
-                                    }
-                                },
-                            textAlign = TextAlign.Start,
-                            color = Color.White,
-                            fontSize = 20.sp
-                        )
                     }
-
                     previousTopPadding =
-                        currentTopPadding + (if (imageData.resource != null) imageData.size.dp else 0.dp)
+                        currentTopPadding + imageData.size.dp
                 }
             }
         }

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 
 class OceanViewModel : ViewModel() {
     data class ImageData(
-        val resource: Int?,
+        val resource: Int,
         val title: String,
         val text: String,
         val depth: Int,
@@ -24,7 +24,7 @@ class OceanViewModel : ViewModel() {
 
     val imageDataList = listOf(
         ImageData(
-            null, "The Sunlit Zone",
+            R.drawable.cloud, "The Sunlit Zone",
             "The sunlit ocean zone, also known as the euphotic or epipelagic zone, is the uppermost layer" +
                     " of the ocean which sunlight penetrates and supports photosynthesis. This zone " +
                     "typically extends from the ocean's surface down to a depth of around 200 meters" +
@@ -36,7 +36,7 @@ class OceanViewModel : ViewModel() {
             25, 150f
         ),
         ImageData(
-            null, "The Twilight Zone", "The twilight zone, also referred to as the " +
+            R.drawable.cloud, "The Twilight Zone", "The twilight zone, also referred to as the " +
                     "mesopelagic zone, is the ocean layer that begins from the edge of the euphotic" +
                     " zone (where sunlight diminishes)." +
                     " In this zone, sunlight is still present but extremely faint and appears as a dim twilight, " +
@@ -50,24 +50,24 @@ class OceanViewModel : ViewModel() {
             200, 150f
         ),
         ImageData(
-            null,
+            R.drawable.cloud,
             "The Midnight Zone",
             "The midnight zone, also known as the bathypelagic zone, is the oceanic layer that extends from the bottom of the twilight zone around 1000 meters deep. This zone is characterized by complete darkness, cold temperatures, and strong pressure. The midnight zone is one of the most mysterious and least explored regions of the ocean. Many of the organisms that inhabit this zone have developed unique adaptations to survive in the harsh conditions, such as pressure-resistant body structures and specialized feeding strategies.",
             1000,
             150f
         ),
         ImageData(
-            null,
+            R.drawable.cloud,
             "The Abyssal Zone",
             "The abyssal zone, often referred to as the abyssopelagic zone, is the deepest and most remote layer of the ocean. It begins at the edge of the midnight zone, around 4000 meters below the ocean's surface, and extends down to the ocean floor or 6000m. This zone is characterized by extremely high pressure, complete darkness, and near-freezing temperatures. The abyssal zone is home to a variety of unique and often bizarre organisms that have evolved to survive in these extreme conditions. It also contains hydrothermal vents, where superheated water rich in minerals emerges from the seafloor, supporting specialized ecosystems.",
-            3985,
+            4000,
             150f
         ),
         ImageData(
-            null,
+            R.drawable.cloud,
             "The Hadal Zone",
             "The hadal zone is the oceanic zone that encompasses the deepest ocean trenches, ranging from around 6000 meters to the bottom of the ocean's deepest points. This zone is characterized by extreme pressure, complete darkness, and cold temperatures, similar to the abyssal zone. However, what sets the hadal zone apart is its unique geological features, including deep-sea trenches and subduction zones. Despite the challenging conditions, life has been discovered even in these depths, including specialized organisms that have adapted to thrive in the harsh environment.",
-            5980,
+            6000,
             150f
         )
 
