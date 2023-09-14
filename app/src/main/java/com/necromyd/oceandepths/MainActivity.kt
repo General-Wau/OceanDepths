@@ -7,6 +7,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -101,16 +103,27 @@ fun TextPopUp() {
                 viewModel.selectedImage?.let {
                     Column {
                         Text(
-                            modifier = Modifier.padding(bottom = 10.dp),
+                            modifier = Modifier.padding(10.dp),
                             text = it.title,
                             textAlign = TextAlign.Center,
                             fontSize = 20.sp,
                             color = Color.White
                         )
-                        Text(
-                            text = it.text,
-                            textAlign = TextAlign.Center, fontSize = 16.sp, color = Color.White
-                        )
+                        Box(
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .fillMaxWidth()
+                                .background(Color.White)
+                                .padding(10.dp)
+                                .verticalScroll(rememberScrollState()), // Make this Text scrollable
+                        ) {
+                            Text(
+                                text = it.text,
+                                textAlign = TextAlign.Center,
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            )
+                        }
                     }
                 }
             }
@@ -224,6 +237,7 @@ fun OceanDepth(verticalScrollState: ScrollState) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(start = 20.dp)
             ) {
                 val coroutineScope = rememberCoroutineScope()
                 var previousTopPadding = 0.dp
@@ -235,31 +249,31 @@ fun OceanDepth(verticalScrollState: ScrollState) {
                     val calculatedPadding = currentTopPadding - previousTopPadding
 
                     Spacer(modifier = Modifier.height(calculatedPadding))
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(imageData.size.dp)
-                    ) {
-                        if (isVisible) {
-                            Image(
-                                painter = painterResource(id = imageData.resource),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(start = 50.dp, top = 0.dp, bottom = 0.dp)
-                                    .clickable {
-                                        coroutineScope.launch {
-                                            viewModel.selectedImage = imageData
-                                            viewModel.showTextPopUp = true
-                                        }
-                                    },
-                                contentScale = ContentScale.FillHeight
-                            )
+                    if (viewModel.isScrollEnabled) {
+                        Box(
+                            modifier = Modifier
+                                .height(imageData.size.dp)
+                                .padding(end = 90.dp),
+                        ) {
+                            if (isVisible) {
+                                Image(
+                                    painter = painterResource(id = imageData.resource),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clickable {
+                                            coroutineScope.launch {
+                                                viewModel.selectedImage = imageData
+                                                viewModel.showTextPopUp = true
+                                            }
+                                        },
+                                    contentScale = ContentScale.FillHeight
+                                )
+                            }
                         }
+                        previousTopPadding =
+                            currentTopPadding + imageData.size.dp
                     }
-                    previousTopPadding =
-                        currentTopPadding + imageData.size.dp
                 }
             }
         }
@@ -274,6 +288,7 @@ fun OceanDepth(verticalScrollState: ScrollState) {
             viewModel.scrollPosition.value = verticalScrollState.value
         }
     }
+
 }
 
 /**
@@ -373,63 +388,64 @@ fun TitleScreenContent() {
     } else {
         R.drawable.title_en
     }
-
-    if (showContent) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(16.dp)
+    if (!(viewModel.isScrollEnabled)) {
+        if (showContent) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painterResource(id = imageResId),
-                    contentDescription = stringResource(id = R.string.main_title_description),
-                    modifier = Modifier.size(370.dp)
-                )
-                Spacer(modifier = Modifier.height(30.dp))
-                Button(
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Image(
+                        painterResource(id = imageResId),
+                        contentDescription = stringResource(id = R.string.main_title_description),
+                        modifier = Modifier.size(370.dp)
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Button(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(50.dp),
+                        onClick = {
+                            showContent = !showContent
+                            viewModel.isScrollEnabled = true
+                        },
+                        shape = RoundedCornerShape(40.dp),
+                        elevation = ButtonDefaults.elevation(
+                            defaultElevation = 10.dp,
+                            pressedElevation = 15.dp,
+                            disabledElevation = 0.dp
+                        ),
+                        colors = ButtonDefaults.buttonColors(customButtonColor)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.main_button),
+                            fontSize = 25.sp,
+                            color = Color.White
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(120.dp))
+                }
+            }
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                Row(
                     modifier = Modifier
-                        .width(200.dp)
-                        .height(50.dp),
-                    onClick = {
-                        showContent = !showContent
-                        viewModel.isScrollEnabled = true
-                    },
-                    shape = RoundedCornerShape(40.dp),
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 10.dp,
-                        pressedElevation = 15.dp,
-                        disabledElevation = 0.dp
-                    ),
-                    colors = ButtonDefaults.buttonColors(customButtonColor)
+                        .fillMaxWidth()
+                        .padding(7.dp),
+                    horizontalArrangement = Arrangement.End
                 ) {
                     Text(
-                        text = stringResource(id = R.string.main_button),
-                        fontSize = 25.sp,
-                        color = Color.White
+                        text = stringResource(id = R.string.credits),
+                        fontSize = 15.sp,
+                        color = Color.Gray
                     )
                 }
-                Spacer(modifier = Modifier.height(120.dp))
-            }
-        }
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(7.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = stringResource(id = R.string.credits),
-                    fontSize = 15.sp,
-                    color = Color.Gray
-                )
             }
         }
     }

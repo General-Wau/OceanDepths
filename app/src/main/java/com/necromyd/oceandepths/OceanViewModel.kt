@@ -32,6 +32,13 @@ class OceanViewModel(applicationContext: Context) : ViewModel() {
             60f
         ),
         ImageData(
+            R.drawable.img_coral,
+            applicationContext.getString(R.string.coral_reef),
+            applicationContext.getString(R.string.coral_reef_text),
+            75,
+            250f
+        ),
+        ImageData(
             R.drawable.twilight_zone,
             applicationContext.getString(R.string.twilight_zone),
             applicationContext.getString(R.string.twilight_zone_text),
