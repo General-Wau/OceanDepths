@@ -32,11 +32,32 @@ class OceanViewModel(applicationContext: Context) : ViewModel() {
             60f
         ),
         ImageData(
+            R.drawable.img_pool,
+            applicationContext.getString(R.string.deepest_pool),
+            applicationContext.getString(R.string.deepest_pool_text),
+            60,
+            200f
+        ),
+        ImageData(
+            R.drawable.img_eurotunnel,
+            applicationContext.getString(R.string.eurotunnel),
+            applicationContext.getString(R.string.eurotunnel_text),
+            115,
+            200f
+        ),
+        ImageData(
             R.drawable.img_coral,
             applicationContext.getString(R.string.coral_reef),
             applicationContext.getString(R.string.coral_reef_text),
-            75,
-            250f
+            145,
+            200f
+        ),
+        ImageData(
+            R.drawable.img_seal,
+            applicationContext.getString(R.string.northern_fur_seal),
+            applicationContext.getString(R.string.northern_fur_seal_text),
+            175,
+            150f
         ),
         ImageData(
             R.drawable.twilight_zone,
