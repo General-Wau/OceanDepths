@@ -67,6 +67,49 @@ class OceanViewModel(applicationContext: Context) : ViewModel() {
             60f
         ),
         ImageData(
+            R.drawable.img_bottlenose,
+            applicationContext.getString(R.string.bottlenose),
+            applicationContext.getString(R.string.bottlenose_text),
+            250,
+            150f
+        ),
+        ImageData(
+            R.drawable.img_sinkhole,
+            applicationContext.getString(R.string.dragon_hole),
+            applicationContext.getString(R.string.dragon_hole_text),
+            300,
+            200f
+        ),
+        ImageData(
+            R.drawable.img_scuba_dive,
+            applicationContext.getString(R.string.scuba_dive),
+            applicationContext.getString(R.string.scuba_dive_text),
+            332,
+            150f
+        ),
+        ImageData(
+            R.drawable.img_spider_crab,
+            applicationContext.getString(R.string.spider_crab),
+            applicationContext.getString(R.string.spider_crab_text),
+            600,
+            200f
+        ),
+        ImageData(
+            R.drawable.img_burj,
+            applicationContext.getString(R.string.burj),
+            applicationContext.getString(R.string.burj_text),
+            828,
+            200f
+        ),
+        ImageData(
+            R.drawable.img_vamp_squid,
+            applicationContext.getString(R.string.vampire_squid),
+            applicationContext.getString(R.string.vampire_squid_text),
+            900,
+            250f
+        ),
+
+        ImageData(
             R.drawable.midnight_zone,
             applicationContext.getString(R.string.midnight_zone),
             applicationContext.getString(R.string.midnight_zone_text),
