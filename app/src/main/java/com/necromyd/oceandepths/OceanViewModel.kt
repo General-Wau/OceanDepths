@@ -108,13 +108,40 @@ class OceanViewModel(applicationContext: Context) : ViewModel() {
             900,
             250f
         ),
-
         ImageData(
             R.drawable.midnight_zone,
             applicationContext.getString(R.string.midnight_zone),
             applicationContext.getString(R.string.midnight_zone_text),
             1000,
             60f
+        ),
+        ImageData(
+            R.drawable.img_greatwhite,
+            applicationContext.getString(R.string.great_white),
+            applicationContext.getString(R.string.great_white_text),
+            1170,
+            250f
+        ),
+        ImageData(
+            R.drawable.img_openpit,
+            applicationContext.getString(R.string.open_pit_mine),
+            applicationContext.getString(R.string.open_pit_mine_text),
+            1210,
+            250f
+        ),
+        ImageData(
+            R.drawable.img_lake,
+            applicationContext.getString(R.string.lake),
+            applicationContext.getString(R.string.lake_text),
+            1642,
+            250f
+        ),
+        ImageData(
+            R.drawable.img_squid,
+            applicationContext.getString(R.string.squid),
+            applicationContext.getString(R.string.squid_text),
+            2000,
+            350f
         ),
         ImageData(
             R.drawable.abyssal_zone,
