@@ -106,7 +106,7 @@ class OceanViewModel(applicationContext: Context) : ViewModel() {
             applicationContext.getString(R.string.vampire_squid),
             applicationContext.getString(R.string.vampire_squid_text),
             900,
-            250f
+            200f
         ),
         ImageData(
             R.drawable.midnight_zone,
@@ -156,6 +156,20 @@ class OceanViewModel(applicationContext: Context) : ViewModel() {
             applicationContext.getString(R.string.hadal_zone_text),
             6000,
             60f
+        ),
+        ImageData(
+            R.drawable.img_volcano,
+            applicationContext.getString(R.string.volcano),
+            applicationContext.getString(R.string.volcano_text),
+            6893,
+            250f
+        ),
+        ImageData(
+            R.drawable.img_everest,
+            applicationContext.getString(R.string.everest),
+            applicationContext.getString(R.string.everest_text),
+            8848,
+            250f
         ),
     )
 
