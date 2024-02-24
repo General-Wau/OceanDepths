@@ -1,8 +1,10 @@
 # OceanDepths
 Visual representation of lifeforms and landmarks found at various depths in the ocean.
 
-![Alt text](https://i.imgur.com/nJ420Ab.jpg "Main Sreen")
-![Alt text](https://i.imgur.com/uAGYm6y.jpg "Before Interaction")
-![Alt text](https://i.imgur.com/JEaIBJl.jpg "Shallow Water")
-![Alt text](https://i.imgur.com/zLReYPw.jpg "Deep Water")
-![Alt text](https://i.imgur.com/sjGm4Fz.jpg "Interaction and Info")
+Screenshots :
+
+<img src="https://i.imgur.com/nJ420Ab.jpg" width=50% height=50%>
+<img src="https://i.imgur.com/uAGYm6y.jpg" width=50% height=50%>
+<img src="https://i.imgur.com/JEaIBJl.jpg" width=50% height=50%>
+<img src="https://i.imgur.com/zLReYPw.jpg" width=50% height=50%>
+<img src="https://i.imgur.com/sjGm4Fz.jpg" width=50% height=50%>
