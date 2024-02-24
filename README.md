@@ -1,6 +1,8 @@
 # OceanDepths
 Visual representation of lifeforms and landmarks found at various depths in the ocean.
 
+Features : Kotlin, Jetpack Compose.
+
 Screenshots :
 
 <img src="https://i.imgur.com/nJ420Ab.jpg" width=50% height=50%>
